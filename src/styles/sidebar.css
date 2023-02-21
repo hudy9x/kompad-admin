@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sidebar {
+  background-color: #f0f0f0;
+  flex: 0 0 auto;
+}
+
+.dropdown {
+  @apply text-gray-700 hover:text-gray-900 hover:bg-gray-50;
+}

@@ -1,4 +1,4 @@
-import { DashModule } from "@/pages/admin";
+import DashModule from "@/pages/admin";
 import Image from "next/image";
 import { Search } from "../Search";
 

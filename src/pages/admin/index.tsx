@@ -7,7 +7,7 @@ const dashModule = [
   { name: 'Users', icon: AiOutlineUser, href:'users', current: false },
 ]
 
-export const DashModule = () => {
+const DashModule = () => {
   return (
     <nav className="mt-6 px-3">
       <div className="space-y-1" >
@@ -28,3 +28,5 @@ export const DashModule = () => {
     </nav>
   )
 }
+
+export default DashModule

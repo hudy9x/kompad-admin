@@ -4,6 +4,7 @@ import { signIn } from "@/services/signin"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useRouter } from 'next/router';
+import { trpc } from '../../../utils/trpc';
 
 const SigninSchema = Yup.object().shape({
   username: Yup.string().required(),
@@ -12,7 +13,6 @@ const SigninSchema = Yup.object().shape({
 })
 
 export default function Login() {
-
   const router = useRouter();
 
   const formik = useFormik({

@@ -135,28 +135,26 @@ export default function Checkout() {
   })
 
 
-  return <div id="checkout" className="bg-gray-50 h-screen">
-    <PayPalScriptProvider deferLoading={false} options={options}>
-      <div className="mainbox pt-24 pb-20">
-        <h2 className="title2">Checkout</h2>
-        <form className="checkout-form bg-white mt-8 px-8 py-8 m-auto shadow-xl rounded-md border md:w-[500px] space-y-4"
-          onSubmit={formik.handleSubmit}
-        >
-          {step === 2 ? <OrderPayment unit={+formik.values.unit} /> : null}
-          {step === 2 ? <div className="text-sm text-indigo-600 hover:underline cursor-pointer" onClick={() => nextStep(1)}>{'Go back to update order infomation'}</div> : null}
-          {step === 1 ? <OrderSummary formik={formik} yearlyCost={yearlyCost} monthlyCost={monthlyCost} /> : null}
+  return <ProtectedLayout>
+    <div id="checkout" className="bg-gray-50 h-screen">
+      <PayPalScriptProvider deferLoading={false} options={options}>
+        <div className="mainbox pt-24 pb-20">
+          <h2 className="title2">Checkout</h2>
+          <form className="checkout-form bg-white mt-8 px-8 py-8 m-auto shadow-xl rounded-md border md:w-[500px] space-y-4"
+            onSubmit={formik.handleSubmit}
+          >
+            {step === 2 ? <OrderPayment unit={+formik.values.unit} /> : null}
+            {step === 2 ? <div className="text-sm text-indigo-600 hover:underline cursor-pointer" onClick={() => nextStep(1)}>{'Go back to update order infomation'}</div> : null}
+            {step === 1 ? <OrderSummary formik={formik} yearlyCost={yearlyCost} monthlyCost={monthlyCost} /> : null}
 
-          <button
-            className={`btn btn-primary btn-block mt-4 ${step === 1 ? '' : 'hidden'}`}
-            onClick={() => nextStep(step + 1)}>Thanh toán</button>
-        </form>
-      </div>
-    </PayPalScriptProvider>
-  </div>
-}
-
-Checkout.getLayout = function getLayout(page: JSX.Element) {
-  return <ProtectedLayout>{page}</ProtectedLayout>
+            <button
+              className={`btn btn-primary btn-block mt-4 ${step === 1 ? '' : 'hidden'}`}
+              onClick={() => nextStep(step + 1)}>Thanh toán</button>
+          </form>
+        </div>
+      </PayPalScriptProvider>
+    </div>
+  </ProtectedLayout>
 }
 
 

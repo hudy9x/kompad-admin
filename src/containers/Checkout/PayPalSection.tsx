@@ -1,5 +1,5 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { OnApproveData, OnApproveActions } from "@paypal/paypal-js/types/components/buttons"
+import { OnApproveData, OnApproveActions, CreateOrderData, CreateOrderActions } from "@paypal/paypal-js/types/components/buttons"
 import { calculateCost } from "../../libs/utils";
 import { createTransactionNUpdateUserPlan } from "../../services/transaction";
 import { PaymentMethod, TransactionStatus } from "../../services/_type";
@@ -38,7 +38,7 @@ export function PaypalSection({ unit }: { unit: number }) {
               method: PaymentMethod.PAYPAL,
               history: JSON.stringify(captures)
             }).then((transactionId) => {
-                push(`/confirm-payment?unit=${unit}&amount=${total}&method=PAYPAL&transactionId=${transactionId}`)
+              push(`/confirm-payment?unit=${unit}&amount=${total}&method=PAYPAL&transactionId=${transactionId}`)
             })
 
             resolve()
@@ -55,26 +55,30 @@ export function PaypalSection({ unit }: { unit: number }) {
     })
   }
 
-  const onCreateOrder = (data, action) => {
-    const isProd = process.env.NODE_ENV === 'production'
-    const value = isProd ? (total + '') : '1'
+  const onCreateOrder = (data: CreateOrderData, action: CreateOrderActions) : Promise<string> => {
 
-    console.log('create order:', value)
+    return new Promise((resolve, reject) => {
+      const isProd = process.env.NODE_ENV === 'production'
+      const value = isProd ? (total + '') : '1'
 
-    return action.order.create({
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value
+      console.log('create order:', value)
+
+      action.order.create({
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "USD",
+              value
+            }
           }
-        }
-      ]
-    }).then((orderId: string) => {
-      console.log('created paypal order', orderId)
-      return orderId;
-    }).catch((err: Record<string, unknown>) => { 
-      console.log('create order error', err)
+        ]
+      }).then((orderId: string) => {
+        console.log('created paypal order', orderId)
+        resolve(orderId)
+      }).catch((err: Record<string, unknown>) => {
+        console.log('create order error', err)
+        reject('create order error')
+      })
     })
   }
 
@@ -86,7 +90,7 @@ export function PaypalSection({ unit }: { unit: number }) {
 
   return <div className="mt-3 border border-gray-200 bg-gray-50 p-3 rounded-md">
     <PayPalButtons
-      style={{layout: 'vertical', color: 'gold'}}
+      style={{ layout: 'vertical', color: 'gold' }}
       createOrder={onCreateOrder}
       onApprove={onApprove}
       onError={onError}

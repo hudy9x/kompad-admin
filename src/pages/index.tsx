@@ -1,6 +1,4 @@
 import { GetStaticProps } from "next";
-import Head from "next/head";
-import Menu from "../components/Menu";
 import Intro from "../components/Intro";
 import Features from "../components/Features";
 import Accessibility from "../components/Accessibility";
@@ -43,7 +41,7 @@ export default function Home({ release }: { release: IRelease }) {
   };
 
   return (
-    <>
+    <Layout>
       <Intro />
       <AutoActiveMenu name="features" ratio={0.3}>
         <Features />
@@ -54,12 +52,8 @@ export default function Home({ release }: { release: IRelease }) {
       <Download version={version} link={links} />
       <FAQs />
       <Footer />
-    </>
+    </Layout>
   );
-}
-
-Home.getLayout = function getLayout(page: JSX.Element) {
-  return <Layout>{page}</Layout>
 }
 
 export const getStaticProps: GetStaticProps = async () => {

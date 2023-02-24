@@ -91,7 +91,7 @@ export default function PricingPlan({ release }: { release: IRelease }) {
 
 
   return (
-    <>
+    <Layout>
       <Head> <title>Pricing plan</title> </Head>
       <div id="pricing-plan" className="pt-32 pb-20 border-b border-gray-300">
         <div className="main-box">
@@ -141,12 +141,8 @@ export default function PricingPlan({ release }: { release: IRelease }) {
       </div>
       <FAQs />
       <Footer />
-    </>
+    </Layout>
   );
-}
-
-PricingPlan.getLayout = function getLayout(page: JSX.Element) {
-  return <Layout>{page}</Layout>
 }
 
 export const getStaticProps: GetStaticProps = async () => {

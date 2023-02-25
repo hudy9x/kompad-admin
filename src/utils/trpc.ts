@@ -1,7 +1,6 @@
+import { AppRouter } from '@/server/routers';
 import { httpBatchLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
-import type { LoginRouter } from '../server/routers/login';
-
 function getBaseUrl() {
   if (typeof window !== 'undefined')
     // browser should use relative path
@@ -19,8 +18,8 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-export const trpc = createTRPCNext<LoginRouter>({
-  config({ ctx }) {
+export const trpc = createTRPCNext<AppRouter>({
+  config() {
     return {
       links: [
         httpBatchLink({

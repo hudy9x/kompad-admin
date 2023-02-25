@@ -1,23 +1,39 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
-import admin from 'firebase-admin';
-import { messageError, messageSuccess } from '@/components/Message';
+import { adminAuth } from '@/server/libs/firebase-admin';
+import { RoleAdmin } from '@/enums';
 
-export const adminRole = router({
+const checkRoleAdmin = async (uuid: string) => {
+  try {
+    const userRecord = await adminAuth.getUser(uuid);
+    if(!userRecord.customClaims) {
+      return;
+    }
+    const isAdmin = userRecord.customClaims.admin;
+    return isAdmin;
+  } catch (er) {
+    console.error(er);
+    return false;
+  }
+}
+
+export const roleRouter = router({
   providerAdminRole: procedure
     .input(
       z.object({
         uuid: z.string()
       })
     )
-    .query(({ input }) => {
-      admin.auth().setCustomUserClaims(input.uuid, { admin: true }).then(() => {
-        messageSuccess('Admin privilege granted successfully');
-      }).catch(() => {
-        messageError('Failed to grant admin privilege');
-      })
+    .mutation( async ({ input }) => {
+      try {
+        const isAdmin = await checkRoleAdmin(input.uuid);
+        if(isAdmin) { // user is admin
+          return RoleAdmin.EXIST
+        }
+        await adminAuth.setCustomUserClaims(input.uuid, { admin: true }); // provider admin for user
+        return RoleAdmin.SUCCESS;
+      } catch (err) {
+        return RoleAdmin.ERR;
+      }
     })
 }) 
-
-// export type definition of API
-export type AdminRoleRouter = typeof adminRole;

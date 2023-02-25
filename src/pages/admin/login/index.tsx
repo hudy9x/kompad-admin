@@ -1,10 +1,8 @@
 import { Input } from "@/components/Controls"
-import { messageSuccess, messageError } from "@/components/Message"
-import { signIn } from "@/services/signin"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useRouter } from 'next/router';
-import { trpc } from '../../../utils/trpc';
+import { trpc } from "@/utils/trpc";
 
 const SigninSchema = Yup.object().shape({
   username: Yup.string().required(),
@@ -15,6 +13,7 @@ const SigninSchema = Yup.object().shape({
 export default function Login() {
   const router = useRouter();
 
+  const mutation = trpc.loginAdmin.useMutation();
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -23,40 +22,13 @@ export default function Login() {
     onSubmit: (user) => {
       SigninSchema.validate(user, { abortEarly: false }).then(valid => {
         const { username, password } = user;
-        signIn(username, password).then((user) => {
-          if (user) {
-            messageSuccess("Signing in successfully ! 😎");
-            router.push('/admin/house')
-          } else {
-            alert("username or password invalid");
-          }
-        }).catch(err => {
-          console.dir(err)
-          let mess = ''
-          switch (err.code) {
-            case "auth/wrong-password":
-              mess = "Wrong password";
-              break;
-
-            case "auth/user-not-found":
-              mess = "User not found";
-              break;
-
-            case "auth/internal-error":
-              mess = "Internal Error"
-              break;
-
-            case "auth/invalid-email":
-              mess = "Invalid email"
-              break;
-
-            default:
-              mess = "Something went wrong"
-              break;
-          }
-
-          messageError(mess)
-        })
+        mutation.mutate({
+          email: username,
+          password: password
+        });
+       console.log(mutation.data);
+      console.log(1231);
+        
       }).catch(err => {
         if (!err.inner.length) return
 

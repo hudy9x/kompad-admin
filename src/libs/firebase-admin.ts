@@ -1,6 +1,6 @@
+import { serviceAccount } from "@/config/serviceAccount";
 import admin from "firebase-admin";
-import serviceAccount  from "@/config/serviceAccount.json";
-import { Auth } from "firebase-admin/lib/auth/auth";
+
 
 // Initialize Firebase
 if(!admin.apps.length) {
@@ -9,6 +9,6 @@ if(!admin.apps.length) {
   });
 }
 
-const adminAuth: Auth = admin.auth();
+const adminAuth = admin.auth();
 
 export { adminAuth };

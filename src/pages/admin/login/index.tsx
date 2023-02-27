@@ -1,53 +1,74 @@
 import { Input } from "@/components/Controls"
 import { useFormik } from "formik"
-import * as Yup from "yup"
 import { useRouter } from 'next/router';
 import { trpc } from "@/utils/trpc";
-
-const SigninSchema = Yup.object().shape({
-  username: Yup.string().required(),
-  password: Yup.string().required(),
-  about: Yup.string().min(10).max(100)
-})
+import { messageError } from "@/components/Message";
+import { checkUser, getIdToken, signIn } from "@/service/signIn";
+import { auth } from "@/libs/firebase";
+import { serviceAccount } from "@/config/serviceAccount";
+import { useEffect } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const mutation = trpc.addTokenUser.useMutation();
 
-  const mutation = trpc.loginAdmin.useMutation();
+
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
-    onSubmit: (user) => {
-      SigninSchema.validate(user, { abortEarly: false }).then(valid => {
-        const { username, password } = user;
-        mutation.mutate({
+    onSubmit: ({ username, password }) => {
+      signIn(auth, username, password).then(async (user) => {
+        const idToken = await getIdToken(user);
+        if (!idToken) {
+          console.log('NOT ID TOKEN');
+          return;
+        }
+        await mutation.mutate({
           email: username,
-          password: password
-        });
-       console.log(mutation.data);
-      console.log(1231);
-        
-      }).catch(err => {
-        if (!err.inner.length) return
-
-        const errors = err.inner as Yup.ValidationError[];
-        const errorMessages = { username: '', password: '', about: '' }
-
-        errors.forEach(error => {
-          if (!error.message || !error.path) return;
-
-          errorMessages[error.path as keyof typeof errorMessages] = error.message
+          password: password,
+          idToken: idToken
         })
+      }).catch(err => {
+        console.dir(err)
+        let mess = ''
+        switch (err.code) {
+          case "auth/wrong-password":
+            mess = "Wrong password";
+            break;
 
-        formik.setErrors(errorMessages)
+          case "auth/user-not-found":
+            mess = "User not found";
+            break;
 
-      })
+          case "auth/internal-error":
+            mess = "Internal Error"
+            break;
+
+          case "auth/invalid-email":
+            mess = "Invalid email"
+            break;
+
+          default:
+            mess = "Something went wrong"
+            break;
+        }
+
+        messageError(mess)
+      });
     }
   })
-
-
+  
+  useEffect(() => {
+    if(!mutation.data) {
+      return;
+    }
+    const isUser = checkUser(mutation.data);
+    if (isUser) {
+      router.push('/admin/house');
+    }
+  }, [mutation.data, router])
   return (
     <div className="flex h-screen">
       <div className="m-auto border bg-white p-6 shadow-lg rounded-lg w-[500px]">

@@ -1,19 +1,26 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
-import { adminAuth } from '@/server/libs/firebase-admin';
-import { RoleAdmin } from '@/enums';
+import { adminAuth } from '@/libs/firebase-admin';
 
 const checkRoleAdmin = async (uuid: string) => {
   try {
     const userRecord = await adminAuth.getUser(uuid);
     if(!userRecord.customClaims) {
-      return;
+      return false;
     }
     const isAdmin = userRecord.customClaims.admin;
     return isAdmin;
   } catch (er) {
     console.error(er);
-    return false;
+  }
+}
+
+export const providerAdmin = async (uuid: string) => {
+  try { 
+    await adminAuth.setCustomUserClaims(uuid, { admin: true });
+    return true;
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -27,13 +34,13 @@ export const roleRouter = router({
     .mutation( async ({ input }) => {
       try {
         const isAdmin = await checkRoleAdmin(input.uuid);
-        if(isAdmin) { // user is admin
-          return RoleAdmin.EXIST
+        if(isAdmin) {
+          return false;
         }
-        await adminAuth.setCustomUserClaims(input.uuid, { admin: true }); // provider admin for user
-        return RoleAdmin.SUCCESS;
+        const isAdminProvider = await providerAdmin(input.uuid);
+        return isAdminProvider;
       } catch (err) {
-        return RoleAdmin.ERR;
+        console.log(err)
       }
     })
 }) 

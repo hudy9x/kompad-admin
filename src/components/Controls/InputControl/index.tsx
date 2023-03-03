@@ -1,11 +1,11 @@
-import {useState, useEffect, ChangeEvent } from "react"
+import { useState, useEffect, ChangeEvent } from "react"
 import Addon from "./Addon"
 import InputIcon from "./InputIcon"
 import { InputProps } from "../type"
 
 export default function InputControl({
   title, value, onChange, type = "text", name,
-  placeholder, helper, required, error, 
+  placeholder, helper, required, error,
   disabled, readOnly, icon, addon
 }: InputProps) {
   let classes = ["form-control"]
@@ -45,9 +45,9 @@ export default function InputControl({
         onChange={onInputChange}
         placeholder={placeholder}
         className="form-input"
-        />
+      />
     </div>
-    { helper && !error ? <p className="mt-2 text-sm text-gray-500" >{helper}</p> : null }
-    { error ? <p className="mt-2 text-sm text-red-500">{error}</p> : null }
+    {helper && !error ? <p className="mt-2 text-sm text-gray-500" >{helper}</p> : null}
+    {error ? <p className="mt-2 text-sm text-red-500">{error}</p> : null}
   </div>
 }

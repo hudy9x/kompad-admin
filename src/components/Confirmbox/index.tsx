@@ -24,7 +24,7 @@ const createConfirm: CreateConfirmFunc = (type, action) => {
   const container = createContainer();
   const root = createRoot(container)
 
-  root.render(<ConfirmBox {...{type, action, root, container}} />)
+  root.render(<ConfirmBox {...{ type, action, root, container }} />)
 
 }
 

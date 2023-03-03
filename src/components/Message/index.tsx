@@ -23,7 +23,7 @@ const createMessage: CreateMessageFunc = (type, message) => {
   const container = createContainer()
   const root = createRoot(container)
 
-  root.render(<MessageBox {...{type, message}} />)
+  root.render(<MessageBox {...{ type, message }} />)
 
   setTimeout(() => {
     root.unmount()

@@ -3,19 +3,18 @@ import Layout from '@/containers/Layout'
 import { TransactionStatus } from '@/services/_type'
 
 import { trpc } from '@/utils/trpc'
-import { useRouter } from "next/router";
 
 export default function Transaction() {
-  const router = useRouter()
-  const query = router.query
-  const [nextId, setNextId] = useState('')
+  const [query, setQuery] = useState({
+    nextId: '',
+    prevId: ''
+  })
 
-  console.log('nextId', nextId)
   const { isLoading, data, isSuccess, refetch } = trpc
     .getAllTransactions.useQuery({
       term: '',
-      nextId,
-      prevId: (query.prevId as string) || ''
+      nextId: query.nextId,
+      prevId: query.prevId
     })
   const mutation = trpc.approveTransaction.useMutation()
 
@@ -30,9 +29,10 @@ export default function Transaction() {
 
     const lastId = data.transactions[data.transactions.length - 1].id
     console.log('called')
-    setNextId(lastId || '')
-    // router.push(`/transactions?nextId=${lastId}`)
-    // refetch()
+    setQuery(prev => ({
+      ...prev,
+      ...{nextId: lastId || '', prevId: ''}
+    }))
   }
 
   const prevPage = () => {
@@ -42,7 +42,11 @@ export default function Transaction() {
     }
 
     const firstId = data.transactions[0].id
-    router.push(`/transactions?prevId=${firstId}`)
+    console.log('called', firstId)
+    setQuery(prev => ({
+      ...prev,
+      ...{prevId: firstId || '', nextId: ''}
+    }))
   }
 
   useEffect(() => {

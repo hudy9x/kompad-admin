@@ -48,12 +48,13 @@ export const getAllTransactions: GetAllTransactionsFunc = ({
     }
 
     if (prevId) {
-      console.log('prev')
+      console.log('prev', prevId)
       const prevRef = await fstore.doc(`/transactions/${prevId}`).get()
       tcollection
         .orderBy("createdAt", "desc")
+        // .startAfter(prevRef)
         .endBefore(prevRef)
-        .limit(2)
+        .limitToLast(2)
         .get()
         .then(handler)
     }

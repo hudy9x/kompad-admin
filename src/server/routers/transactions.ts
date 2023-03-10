@@ -8,10 +8,16 @@ export const transactionRouter = router({
     .input(
       z.object({
         term: z.string(),
+        nextId: z.string(),
+        prevId: z.string()
       })
     )
     .query(async ({ input }) => {
-      const transactions = await getAllTransactions()
+      console.log("input", input)
+      const transactions = await getAllTransactions({
+        nextId: input.nextId,
+        prevId: input.prevId
+      })
 
       return {
         transactions: transactions,
@@ -24,11 +30,11 @@ export const transactionRouter = router({
         transId: z.string(),
         uid: z.string()
       })
-     )
-    .mutation(async({input}) => {
+    )
+    .mutation(async ({ input }) => {
 
       const status = await updateUserPlan(input.transId, input.uid, input.unit)
-      
-      return {status: 0}
+
+      return { status: 0 }
     })
 })

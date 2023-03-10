@@ -35,3 +35,7 @@ tr.row th {
   @apply rounded bg-white py-0.5 px-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 
 }
 
+.section-heading {
+  @apply text-2xl font-extrabold pb-4;
+}
+

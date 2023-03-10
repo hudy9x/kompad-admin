@@ -5,59 +5,30 @@ import {
   BellIcon,
   ClockIcon,
   CogIcon,
-  CreditCardIcon,
-  DocumentChartBarIcon,
   HomeIcon,
   QuestionMarkCircleIcon,
   ScaleIcon,
   ShieldCheckIcon,
-  UserGroupIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import {
-  BanknotesIcon,
-  BuildingOfficeIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
 
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: true },
-  { name: 'History', href: '#', icon: ClockIcon, current: false },
-  { name: 'Balances', href: '#', icon: ScaleIcon, current: false },
-  { name: 'Cards', href: '#', icon: CreditCardIcon, current: false },
-  { name: 'Recipients', href: '#', icon: UserGroupIcon, current: false },
-  { name: 'Reports', href: '#', icon: DocumentChartBarIcon, current: false },
+  { name: 'Users', href: '/user', icon: ClockIcon, current: false },
+  {
+    name: 'Transactions',
+    href: '/transactions',
+    icon: ScaleIcon,
+    current: false,
+  },
 ]
 const secondaryNavigation = [
   { name: 'Settings', href: '#', icon: CogIcon },
   { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
   { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
 ]
-const cards = [
-  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-  // More items...
-]
-const transactions = [
-  {
-    id: 1,
-    name: 'Payment to Molly Sanders',
-    href: '#',
-    amount: '$20,000',
-    currency: 'USD',
-    status: 'success',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  // More transactions...
-]
-const statusStyles = {
-  success: 'bg-green-100 text-green-800',
-  processing: 'bg-yellow-100 text-yellow-800',
-  failed: 'bg-gray-100 text-gray-800',
-}
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -138,39 +109,37 @@ export default function Layout({
                   >
                     <div className="space-y-1 px-2">
                       {navigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? 'bg-cyan-800 text-white'
-                              : 'text-cyan-100 hover:bg-cyan-600 hover:text-white',
-                            'group flex items-center rounded-md px-2 py-2 text-base font-medium'
-                          )}
-                          aria-current={item.current ? 'page' : undefined}
-                        >
-                          <item.icon
-                            className="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200"
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
+                        <Link key={item.name} href={item.href}>
+                          <span
+                            className={classNames(
+                              item.current
+                                ? 'bg-cyan-800 text-white'
+                                : 'text-cyan-100 hover:bg-cyan-600 hover:text-white',
+                              'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                            )}
+                            aria-current={item.current ? 'page' : undefined}
+                          >
+                            <item.icon
+                              className="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200"
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </span>
+                        </Link>
                       ))}
                     </div>
                     <div className="mt-6 pt-6">
                       <div className="space-y-1 px-2">
                         {secondaryNavigation.map((item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-cyan-100 hover:bg-cyan-600 hover:text-white"
-                          >
-                            <item.icon
-                              className="mr-4 h-6 w-6 text-cyan-200"
-                              aria-hidden="true"
-                            />
-                            {item.name}
-                          </a>
+                          <Link key={item.name} href={item.href}>
+                            <span className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-cyan-100 hover:bg-cyan-600 hover:text-white">
+                              <item.icon
+                                className="mr-4 h-6 w-6 text-cyan-200"
+                                aria-hidden="true"
+                              />
+                              {item.name}
+                            </span>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -201,23 +170,23 @@ export default function Layout({
             >
               <div className="space-y-1 px-2">
                 {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-cyan-800 text-white'
-                        : 'text-cyan-100 hover:bg-cyan-600 hover:text-white',
-                      'group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6'
-                    )}
-                    aria-current={item.current ? 'page' : undefined}
-                  >
-                    <item.icon
-                      className="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200"
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
+                  <Link key={item.name} href={item.href}>
+                    <span
+                      className={classNames(
+                        item.current
+                          ? 'bg-cyan-800 text-white'
+                          : 'text-cyan-100 hover:bg-cyan-600 hover:text-white',
+                        'group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6'
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                    >
+                      <item.icon
+                        className="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </span>
+                  </Link>
                 ))}
               </div>
               <div className="mt-6 pt-6">

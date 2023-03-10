@@ -1,11 +1,11 @@
 import { cert, initializeApp, getApps, App } from 'firebase-admin/app'
-import { getFirestore } from 'firebase-admin/firestore'
+import { getFirestore, Timestamp } from 'firebase-admin/firestore'
 import { getAuth } from 'firebase-admin/auth'
 
 const serviceAccount = {
   projectId: process.env.PROJECT_ID,
   clientEmail: process.env.CLIENT_EMAIL,
-  privateKey: process.env.PRIVATE_KEY
+  privateKey: (process.env.PRIVATE_KEY || '').replace(/\\n/g, '\n'),
 }
 
 let app: App
@@ -15,6 +15,10 @@ if (!getApps().length) {
   })
 } else {
   app = getApps()[0]
+}
+
+export const dateToTimestamp = (date: Date) => {
+  return Timestamp.fromDate(date)
 }
 
 export const verifyFirebaseSessionCookie = async (session: string) => {

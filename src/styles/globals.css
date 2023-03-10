@@ -5,3 +5,33 @@
 body{
   @apply bg-gray-200;
 }
+
+.container {
+@apply pt-8 px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8;
+}
+
+.card {
+  @apply rounded-md border border-gray-300 bg-white shadow-lg py-3;
+}
+
+table{
+  @apply w-full;
+}
+
+tr.row th {
+  @apply text-left px-4 py-3 bg-gray-50 border-t border-gray-200;
+}
+
+.row {
+  @apply border-b border-gray-200 hover:bg-gray-100;
+  @apply cursor-pointer;
+}
+
+.cell {
+  @apply px-4 py-3 text-sm ;
+}
+
+.btn{
+  @apply rounded bg-white py-0.5 px-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 
+}
+

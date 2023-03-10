@@ -16,26 +16,30 @@ export interface IUser {
   address: string
   dateOfBirth: Timestamp
   createdAt?: Timestamp
+  createdAtDate?: Date
   status?: EUserStatus
 }
 
 export const getAllUsers = async (): Promise<IUser[]> => {
   return new Promise((resolve, reject) => {
-    fstore.collection('users').get().then((snapshot) => {
-      if (snapshot.empty) {
-        reject([])
-        return;
-      }
+    fstore
+      .collection('users')
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          reject([])
+          return
+        }
 
-      const users:IUser[] = [];
-      snapshot.forEach(s => {
-        const dt = s.data() as IUser;
-        users.push({...dt, ...{id: s.id}})
+        const users: IUser[] = []
+        snapshot.forEach((s) => {
+          const dt = s.data() as IUser
+          dt.createdAtDate = dt.createdAt?.toDate()
+          users.push({ ...dt, ...{ id: s.id } })
+        })
+
+        resolve(users)
       })
-
-      resolve(users)
-      
-    })
   })
 }
 

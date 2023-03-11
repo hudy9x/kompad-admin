@@ -9,7 +9,7 @@ export enum EUserStatus {
 }
 
 export interface IUser {
-  uid?: string
+  id?: string
   fullname: string
   email: string
   photoURL: string
@@ -44,9 +44,9 @@ export const getAllUsers = async (): Promise<IUser[]> => {
 }
 
 export const addUser = async (user: IUser) => {
-  const { uid, address, email, dateOfBirth, fullname, photoURL } = user
+  const { id, address, email, dateOfBirth, fullname, photoURL } = user
 
-  await setDoc(doc(db, 'users', uid || ''), {
+  await setDoc(doc(db, 'users', id || ''), {
     address,
     email,
     createdAt: Timestamp.now(),

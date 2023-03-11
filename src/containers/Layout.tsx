@@ -225,7 +225,7 @@ export default function Layout({
             {/* Search bar */}
             <div className="flex flex-1 justify-between px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
               <div className="flex items-center">
-                <h1 className="section-heading">Transactions</h1>
+                <h1 className="section-heading">{title}</h1>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
                 <button

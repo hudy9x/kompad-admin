@@ -1,32 +1,58 @@
+import { Input } from '@/components'
 import Layout from '@/containers/Layout'
 import { trpc } from '@/utils/trpc'
-import dayjs from 'dayjs';
-import Image from 'next/image';
+import dayjs from 'dayjs'
+import Image from 'next/image'
 
 export default function User() {
-  const allUsers = trpc.getAllUsers.useQuery({term: ''});
+  const allUsers = trpc.getAllUsers.useQuery({ term: '' })
 
   return (
-    <Layout>
+    <Layout title="User">
+      <div className="bg-white border-t border-t-gray-200 shadow" >
+        <div className="header-section">
+          <Input placeholder="Search ..." />
+        </div>
+      </div>
       <div id="user" className="container">
+        <h1 className="card-title">Recently activities</h1>
         <div className="card">
-          <table className="divide-y w-full" >
+          <div className="tab">
+            <div className={`tab-item`}>Active</div>
+            <div className={`tab-item`}>Inactive</div>
+          </div>
+          <table className="">
+            <thead>
+              <tr className="row">
+                <th className="text-left">uid</th>
+                <th className="text-left">email</th>
+                <th className="cell-mobile-hidden text-left">Address</th>
+                <th className="text-left">Status</th>
+                <th className="cell-mobile-hidden text-center">Fullname</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
             <tbody>
-              {allUsers.isSuccess ? allUsers.data.users.map(user => {
-                const fbDate = user.createdAtDate
-                const date = dayjs(fbDate);
-                return <tr className="text-sm text-gray-900" key={user.uid}>
-                  <td className="px-4 py-2 flex items-center gap-2">
-                    { user.photoURL ? <Image src={user.photoURL} width={30} height={30} alt="Avatar" /> : <div className='w-[30px] h-[30px] bg-gray-100'></div> }
-                    { user.email }
-                  </td>
-                  <td className="px-4 py-2">{user.address}</td>
-                  <td className="px-4 py-2">{user.status}</td>
-                  <td className="px-4 py-2">{user.fullname}</td>
-                  <td className="px-4 py-2">{date.format('DD/MM/YYYY')}</td>
-
-                </tr>
-                }) : null}
+              {allUsers.isSuccess
+                ? allUsers.data.users.map((user) => {
+                    const fbDate = user.createdAtDate
+                    const date = dayjs(fbDate)
+                    return (
+                      <tr className="row" key={user.id}>
+                        <td className="cell">
+                          <span className="truncate w-24 block">
+                            {user.id}
+                          </span>
+                        </td>
+                        <td className="cell">{user.email}</td>
+                        <td className="cell">{user.address}</td>
+                        <td className="cell">{user.status}</td>
+                        <td className="cell">{user.fullname}</td>
+                        <td className="cell">{date.format('DD/MM/YYYY')}</td>
+                      </tr>
+                    )
+                  })
+                : null}
             </tbody>
           </table>
         </div>

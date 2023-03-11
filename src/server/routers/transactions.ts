@@ -1,5 +1,5 @@
 import { updateUserPlan } from '@/services/plans'
-import { getAllTransactions, ITransaction } from '@/services/transactions'
+import { getAllTransactions } from '@/services/transactions'
 import { z } from 'zod'
 import { procedure, router } from '../trpc'
 

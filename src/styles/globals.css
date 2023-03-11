@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body{
-  @apply bg-gray-200;
+  @apply bg-gray-100;
 }
 
 .container {
@@ -15,11 +15,11 @@ body{
 }
 
 table{
-  @apply w-full;
+  @apply w-full overflow-y-auto overflow-x-hidden;
 }
 
 tr.row th {
-  @apply text-left px-4 py-3 bg-gray-50 border-t border-gray-200 text-xs uppercase font-medium;
+  @apply px-4 py-3 bg-gray-50 border-t border-gray-200 text-xs uppercase font-medium;
 }
 
 .row {
@@ -31,12 +31,28 @@ tr.row th {
   @apply px-4 py-3 text-sm ;
 }
 
+.cell-mobile-hidden {
+  @apply hidden sm:block
+}
+
+.cell-mobile-show {
+  @apply sm:hidden;
+}
+
 .btn{
   @apply rounded bg-white py-0.5 px-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 
 }
 
 .section-heading {
-  @apply text-2xl font-extrabold pb-4;
+  @apply text-2xl font-extrabold;
+}
+
+.card-title {
+  @apply text-xl font-medium pb-3;
+}
+
+.header-section{
+  @apply py-4 px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8;
 }
 
 .tab{
@@ -50,5 +66,6 @@ tr.row th {
 .tab-item.active:after{
   content: '';
   @apply absolute bottom-[-1px] left-0 w-full h-[2px] bg-indigo-400;
-} 
+}
+
 

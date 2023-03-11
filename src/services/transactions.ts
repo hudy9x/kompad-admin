@@ -2,6 +2,7 @@ import { fstore } from '@/libs/firebase-admin'
 import { ITransaction, TransactionStatus } from './_type'
 
 type GetAllTransactionsFunc = (params: {
+  term?: string
   nextId?: string
   prevId?: string
   status: string
@@ -10,6 +11,7 @@ type GetAllTransactionsFunc = (params: {
 const LIMIT = 20;
 
 export const getAllTransactions: GetAllTransactionsFunc = ({
+  term,
   nextId,
   prevId,
   status,

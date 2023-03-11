@@ -15,6 +15,7 @@ export const transactionRouter = router({
     )
     .query(async ({ input }) => {
       const transactions = await getAllTransactions({
+        term: input.term,
         nextId: input.nextId,
         prevId: input.prevId,
         status: input.status,

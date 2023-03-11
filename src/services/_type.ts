@@ -14,7 +14,9 @@ export interface ITransaction {
   id?: string
   uid: string
   createdAt: Timestamp
+  createdAtDate?: Date
   updatedAt: Timestamp
+  updatedAtDate?: Date
   amount: number
   unit: number
   method: PaymentMethod

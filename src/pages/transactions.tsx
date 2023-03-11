@@ -3,18 +3,21 @@ import Layout from '@/containers/Layout'
 import { TransactionStatus } from '@/services/_type'
 
 import { trpc } from '@/utils/trpc'
+import dayjs from "dayjs";
 
 export default function Transaction() {
   const [query, setQuery] = useState({
     nextId: '',
-    prevId: ''
+    prevId: '',
+    status: TransactionStatus.PENDING
   })
 
-  const { isLoading, data, isSuccess, refetch } = trpc
+  const { isLoading, data, isSuccess, isError, refetch } = trpc
     .getAllTransactions.useQuery({
       term: '',
       nextId: query.nextId,
-      prevId: query.prevId
+      prevId: query.prevId,
+      status: query.status
     })
   const mutation = trpc.approveTransaction.useMutation()
 
@@ -22,13 +25,19 @@ export default function Transaction() {
     mutation.mutate({ unit, uid, transId })
   }
 
+  const clearQuery = () => {
+    setQuery(prev => ({
+      ...prev,
+      ...{nextId: '', prevId: ''}
+    }))
+  }
+
   const nextPage = () => {
-    if (!data?.transactions) {
+    if (!data?.transactions || !data.transactions.length) {
+      clearQuery()
       return;
     }
-
     const lastId = data.transactions[data.transactions.length - 1].id
-    console.log('called')
     setQuery(prev => ({
       ...prev,
       ...{nextId: lastId || '', prevId: ''}
@@ -37,12 +46,12 @@ export default function Transaction() {
 
   const prevPage = () => {
 
-    if (!data?.transactions) {
+    if (!data?.transactions || !data?.transactions.length) {
+      clearQuery()
       return;
     }
 
     const firstId = data.transactions[0].id
-    console.log('called', firstId)
     setQuery(prev => ({
       ...prev,
       ...{prevId: firstId || '', nextId: ''}
@@ -56,15 +65,28 @@ export default function Transaction() {
     }
   }, [mutation])
 
+  const onTabChange = (status: TransactionStatus) => {
+    console.log(status)
+    setQuery(prev => ({
+      ...prev,
+      ...{ status }
+    }))
+  }
 
-  console.log(data?.transactions)
+  const isTabActive = (name: string) => {
+    return name === query.status ? 'active' : ''
+  }
 
   return (
     <Layout>
       <div className="container" id="transaction" >
         <h1 className="section-heading">Transactions</h1>
         <div className="card">
-          {isLoading ? "Loading" : null}
+          <div className="tab">
+            <div className={`tab-item ${isTabActive(TransactionStatus.PENDING)}`} onClick={() => onTabChange(TransactionStatus.PENDING)}>Pending</div>
+            <div className={`tab-item ${isTabActive(TransactionStatus.APPROVED)}`} onClick={() => onTabChange(TransactionStatus.APPROVED)} >Approve</div>
+          </div>
+
           <table>
             <thead>
               <tr className="row">
@@ -72,16 +94,26 @@ export default function Transaction() {
                 <th>Email</th>
                 <th>Amount</th>
                 <th>Currency</th>
-                <th>Unit</th>
+                <th>Unit (month)</th>
                 <th>Method</th>
                 <th>Status</th>
+                <th>Created At</th>
               </tr>
             </thead>
             <tbody>
+              {isLoading ? "Loading" : null}
+              {isSuccess && !data.transactions.length ? <tr className="row">
+                <td className="cell text-center" colSpan={8}>There is no item found</td>
+              </tr> : null}
               {isSuccess ? data.transactions.map(transaction => {
+                const created = dayjs(transaction.createdAtDate)
                 return <tr key={transaction.id}
                   className="row" >
-                  <td className="cell truncate overflow-hidden">{transaction.id}</td>
+                  <td className="cell">
+                    <span className="truncate w-24 block">
+                      {transaction.id}
+                    </span>
+                  </td>
                   <td className="cell">{transaction.email}</td>
                   <td className="cell">{transaction.amount}</td>
                   <td className="cell">{transaction.currency}</td>
@@ -96,11 +128,12 @@ export default function Transaction() {
                       })}>Approve</button>
                       : "APPROVED"
                   }</td>
+                  <td className="cell">{created.format('DD/MM/YYYY')}</td>
                 </tr>
               }) : null}
             </tbody>
           </table>
-          <div className="px-4 pt-2 space-x-2 text-right">
+          <div className="px-4 py-2 space-x-2 text-right">
             <button className="btn" onClick={prevPage}>Prev</button>
             <button className="btn" onClick={nextPage} >Next</button>
           </div>

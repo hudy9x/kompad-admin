@@ -11,7 +11,7 @@ body{
 }
 
 .card {
-  @apply rounded-md border border-gray-300 bg-white shadow-lg py-3;
+  @apply rounded-md border border-gray-300 bg-white shadow-lg;
 }
 
 table{
@@ -19,7 +19,7 @@ table{
 }
 
 tr.row th {
-  @apply text-left px-4 py-3 bg-gray-50 border-t border-gray-200;
+  @apply text-left px-4 py-3 bg-gray-50 border-t border-gray-200 text-xs uppercase font-medium;
 }
 
 .row {
@@ -38,4 +38,17 @@ tr.row th {
 .section-heading {
   @apply text-2xl font-extrabold pb-4;
 }
+
+.tab{
+  @apply flex w-full divide-x divide-gray-300;
+}
+
+.tab-item {
+  @apply px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 relative;
+}
+
+.tab-item.active:after{
+  content: '';
+  @apply absolute bottom-[-1px] left-0 w-full h-[2px] bg-indigo-400;
+} 
 

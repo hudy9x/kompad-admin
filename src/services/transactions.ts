@@ -1,22 +1,27 @@
 import { fstore } from '@/libs/firebase-admin'
-import { ITransaction } from './_type'
+import { ITransaction, TransactionStatus } from './_type'
 
-type GetAllTransactionsFunc = ({
-  nextId,
-  prevId
-}: {
-  nextId?: string,
+type GetAllTransactionsFunc = (params: {
+  nextId?: string
   prevId?: string
+  status: string
 }) => Promise<ITransaction[]>
+
+const LIMIT = 20;
 
 export const getAllTransactions: GetAllTransactionsFunc = ({
   nextId,
-  prevId
+  prevId,
+  status,
 }) => {
   return new Promise(async (resolve, reject) => {
-    const tcollection = fstore.collection('transactions')
+    const tcollection = fstore
+    .collection('transactions')
+    .where("status", "==", status)
 
-    const handler = (snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) => {
+    const handler = (
+      snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+    ) => {
       if (snapshot.empty) {
         resolve([])
         return
@@ -26,43 +31,40 @@ export const getAllTransactions: GetAllTransactionsFunc = ({
 
       snapshot.forEach((tr) => {
         const data = tr.data() as ITransaction
-        console.log(tr.id)
-        transactions.push({ ...data, ...{ id: tr.id } })
+        transactions.push({ ...data, ...{ 
+          id: tr.id,
+          createdAtDate: data.createdAt?.toDate(),
+          updatedAtDate: data.updatedAt?.toDate()
+        } })
       })
 
-      console.log('resolved')
       resolve(transactions)
     }
 
-    console.log('----------------')
-
     if (nextId) {
-      console.log('next', nextId)
       const lastRef = await fstore.doc(`/transactions/${nextId}`).get()
       tcollection
-        .orderBy("createdAt", "desc")
+        .orderBy('createdAt', 'desc')
         .startAfter(lastRef)
-        .limit(2)
+        .limit(LIMIT)
         .get()
         .then(handler)
     }
 
     if (prevId) {
-      console.log('prev', prevId)
       const prevRef = await fstore.doc(`/transactions/${prevId}`).get()
       tcollection
-        .orderBy("createdAt", "desc")
-        // .startAfter(prevRef)
+        .orderBy('createdAt', 'desc')
         .endBefore(prevRef)
-        .limitToLast(2)
+        .limitToLast(LIMIT)
         .get()
         .then(handler)
     }
 
     if (!nextId && !prevId) {
       tcollection
-        .orderBy("createdAt", "desc")
-        .limit(2)
+        .orderBy('createdAt', 'desc')
+        .limit(LIMIT)
         .get()
         .then(handler)
     }

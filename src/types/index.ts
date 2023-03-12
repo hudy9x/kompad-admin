@@ -1,0 +1,3 @@
+export enum NOTIFY_TOPIC {
+  TRANSACTION = 'TRANSACTION'
+}

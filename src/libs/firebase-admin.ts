@@ -1,6 +1,8 @@
 import { cert, initializeApp, getApps, App } from 'firebase-admin/app'
 import { getFirestore, Timestamp } from 'firebase-admin/firestore'
+import { getMessaging } from "firebase-admin/messaging";
 import { getAuth } from 'firebase-admin/auth'
+import { NOTIFY_TOPIC } from '@/types';
 
 const serviceAccount = {
   projectId: process.env.PROJECT_ID,
@@ -27,6 +29,21 @@ export const verifyFirebaseSessionCookie = async (session: string) => {
 }
 
 export const fstore = getFirestore(app)
+
+export const subscribeToTopic = (token: string, topic: NOTIFY_TOPIC) => {
+  return getMessaging().subscribeToTopic([token], topic)
+}
+
+export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
+  const message = {
+    data: {
+      mess
+    },
+    topic
+  }
+  console.log('sending notification', message)
+  return getMessaging().send(message)
+}
 
 // const getUsers = () => {
 //   return new Promise((resolve, reject) => {

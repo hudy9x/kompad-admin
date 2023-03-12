@@ -7,6 +7,12 @@ import Image from 'next/image'
 export default function User() {
   const allUsers = trpc.getAllUsers.useQuery({ term: '' })
 
+  const onClick = () => {
+    fetch('/api/notification/send').then(res => res.json()).then(res => {
+      console.log('send notification sucecs', res)
+    })
+  }
+
   return (
     <Layout title="User">
       <div className="bg-white border-t border-t-gray-200 shadow" >
@@ -15,6 +21,7 @@ export default function User() {
         </div>
       </div>
       <div id="user" className="container">
+        <button className='btn' onClick={onClick} >Send a test notification</button>
         <h1 className="card-title">Recently activities</h1>
         <div className="card">
           <div className="tab">
@@ -35,23 +42,23 @@ export default function User() {
             <tbody>
               {allUsers.isSuccess
                 ? allUsers.data.users.map((user) => {
-                    const fbDate = user.createdAtDate
-                    const date = dayjs(fbDate)
-                    return (
-                      <tr className="row" key={user.id}>
-                        <td className="cell">
-                          <span className="truncate w-24 block">
-                            {user.id}
-                          </span>
-                        </td>
-                        <td className="cell">{user.email}</td>
-                        <td className="cell">{user.address}</td>
-                        <td className="cell">{user.status}</td>
-                        <td className="cell">{user.fullname}</td>
-                        <td className="cell">{date.format('DD/MM/YYYY')}</td>
-                      </tr>
-                    )
-                  })
+                  const fbDate = user.createdAtDate
+                  const date = dayjs(fbDate)
+                  return (
+                    <tr className="row" key={user.id}>
+                      <td className="cell">
+                        <span className="truncate w-24 block">
+                          {user.id}
+                        </span>
+                      </td>
+                      <td className="cell">{user.email}</td>
+                      <td className="cell">{user.address}</td>
+                      <td className="cell">{user.status}</td>
+                      <td className="cell">{user.fullname}</td>
+                      <td className="cell">{date.format('DD/MM/YYYY')}</td>
+                    </tr>
+                  )
+                })
                 : null}
             </tbody>
           </table>

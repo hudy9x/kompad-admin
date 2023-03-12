@@ -7,7 +7,7 @@ export default function User() {
   const allUsers = trpc.getAllUsers.useQuery({ term: '' })
 
   const onClick = () => {
-    fetch('/api/notification/send').then(res => res.json()).then(res => {
+    fetch('/api/notification/send').then(res => {
       console.log('send notification sucecs', res)
     })
   }

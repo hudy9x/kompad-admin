@@ -38,7 +38,7 @@ export const initializeMessaging = () => {
         body: JSON.stringify({
           token: currentToken
         })
-      }).then(res => res.json()).then(data => {
+      }).then(data => {
           console.log(data)
         })
   }).catch(err => {

@@ -6,8 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('ran into here')
   return sendNotify("Hellow", NOTIFY_TOPIC.TRANSACTION).then(messId => {
     console.log('message id', messId)
-    res.status(200)
+    res.status(200).end()
   }).catch(err => {
-    res.status(500)
+    res.status(500).end()
   })
 }

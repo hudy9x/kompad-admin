@@ -45,7 +45,7 @@ export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
       notification: {
         title: "Another title",
         body: "another body",
-        icon: "https://kompad-admin.vercel.app/note.png",
+        icon: "https://kompad-admin.vercel.app/notes.png",
 
       },
       fcmOptions: {

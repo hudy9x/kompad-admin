@@ -3,6 +3,7 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore'
 import { getMessaging } from "firebase-admin/messaging";
 import { getAuth } from 'firebase-admin/auth'
 import { NOTIFY_TOPIC } from '@/types';
+import { Message } from 'firebase-admin/lib/messaging/messaging-api';
 
 const serviceAccount = {
   projectId: process.env.PROJECT_ID,
@@ -35,10 +36,21 @@ export const subscribeToTopic = (token: string, topic: NOTIFY_TOPIC) => {
 }
 
 export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
-  const message = {
+  const message:Message = {
     notification: {
       title: "Hello bitches",
       body: "I'm tired now"
+    },
+    webpush: {
+      notification: {
+        title: "Another title",
+        body: "another body",
+        icon: "https://kompad-admin.vercel.app/note.png",
+
+      },
+      fcmOptions: {
+        link: "https://kompad-admin.vercel.app/transactions?name=123123"
+      }
     },
     data: {
       mess

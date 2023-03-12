@@ -54,6 +54,7 @@ const ListContainer = ({ children }: ListContainerProps) => {
       document.removeEventListener('keyup', handleKeypress)
     }
 
+    // eslint-disable-next-line
   }, [])
 
   return <div className="select-wrapper" >{children}</div>

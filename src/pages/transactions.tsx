@@ -10,7 +10,7 @@ import paypalImg from "../assets/paypal.png"
 import bankImg from "../assets/card.png"
 import Image from "next/image";
 
-const BankIcon = ({method}: {method: string}) => {
+const BankIcon = ({ method }: { method: string }) => {
   const size = 40
   if (method === PaymentMethod.BANK) {
     return <Image className="inline-block" src={bankImg} width={size} height={size} alt="Bank" />
@@ -47,7 +47,7 @@ export default function Transaction() {
   const clearQuery = () => {
     setQuery(prev => ({
       ...prev,
-      ...{nextId: '', prevId: ''}
+      ...{ nextId: '', prevId: '' }
     }))
   }
 
@@ -59,7 +59,7 @@ export default function Transaction() {
     const lastId = data.transactions[data.transactions.length - 1].id
     setQuery(prev => ({
       ...prev,
-      ...{nextId: lastId || '', prevId: ''}
+      ...{ nextId: lastId || '', prevId: '' }
     }))
   }
 
@@ -73,7 +73,7 @@ export default function Transaction() {
     const firstId = data.transactions[0].id
     setQuery(prev => ({
       ...prev,
-      ...{prevId: firstId || '', nextId: ''}
+      ...{ prevId: firstId || '', nextId: '' }
     }))
   }
 
@@ -82,6 +82,7 @@ export default function Transaction() {
       console.log('a')
       refetch()
     }
+    // eslint-disable-next-line
   }, [mutation])
 
   const onTabChange = (status: TransactionStatus) => {
@@ -122,62 +123,62 @@ export default function Transaction() {
           </div>
 
           <div className="overflow-x-auto overflow-y-hidden">
-          <table>
-            <thead>
-              <tr className="row">
-                <th className="text-left">Transaction ID</th>
-                <th className="cell-mobile-hidden text-left">Email</th>
-                <th className="text-left">Amount</th>
-                <th className="cell-mobile-hidden text-center">Method</th>
-                <th>Status</th>
-                <th className="cell-mobile-hidden">Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? <tr className="row">
-                <td className="cell text-center" colSpan={8}>Loading ...</td>
-              </tr> : null}
-              {isSuccess && !data.transactions.length ? <tr className="row">
-                <td className="cell text-center" colSpan={8}>There is no item found</td>
-              </tr> : null}
-              {isSuccess ? data.transactions.map(transaction => {
-                const created = dayjs(transaction.createdAtDate)
-
-                if (query.term && !transaction.email.includes(query.term)) {
-                  return null
-                }
-
-                return <tr key={transaction.id}
-                  className="row" >
-                  <td className="cell">
-                    <span className="truncate w-24 block">
-                      {transaction.id}
-                    </span>
-                    <div className="cell-mobile-show">
-                      <div>{transaction.email}</div>
-                      <div>{transaction.method}</div>
-                      <div>{created.format('DD/MM/YYYY')}</div>
-                    </div>
-                  </td>
-                  <td className="cell cell-mobile-hidden">{transaction.email}</td>
-                  <td className="cell">
-                    {transaction.amount} <span className="text-xs text-gray-500">{transaction.currency}</span> / {transaction.unit} <span className="text-xs text-gray-400">(month)</span>
-                  </td>
-                  <td className="cell cell-mobile-hidden text-center"><BankIcon method={transaction.method} /></td>
-                  <td className="cell text-center">{
-                    transaction.status === TransactionStatus.PENDING
-                      ? <button className="btn" onClick={() => onApprove({
-                        transId: transaction.id || '',
-                        uid: transaction.uid,
-                        unit: transaction.unit
-                      })}>Approve</button>
-                      : <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Approved</span>
-                  }</td>
-                  <td className="cell cell-mobile-hidden text-center">{created.format('DD/MM/YYYY')}</td>
+            <table>
+              <thead>
+                <tr className="row">
+                  <th className="text-left">Transaction ID</th>
+                  <th className="cell-mobile-hidden text-left">Email</th>
+                  <th className="text-left">Amount</th>
+                  <th className="cell-mobile-hidden text-center">Method</th>
+                  <th>Status</th>
+                  <th className="cell-mobile-hidden">Created At</th>
                 </tr>
-              }) : null}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {isLoading ? <tr className="row">
+                  <td className="cell text-center" colSpan={8}>Loading ...</td>
+                </tr> : null}
+                {isSuccess && !data.transactions.length ? <tr className="row">
+                  <td className="cell text-center" colSpan={8}>There is no item found</td>
+                </tr> : null}
+                {isSuccess ? data.transactions.map(transaction => {
+                  const created = dayjs(transaction.createdAtDate)
+
+                  if (query.term && !transaction.email.includes(query.term)) {
+                    return null
+                  }
+
+                  return <tr key={transaction.id}
+                    className="row" >
+                    <td className="cell">
+                      <span className="truncate w-24 block">
+                        {transaction.id}
+                      </span>
+                      <div className="cell-mobile-show">
+                        <div>{transaction.email}</div>
+                        <div>{transaction.method}</div>
+                        <div>{created.format('DD/MM/YYYY')}</div>
+                      </div>
+                    </td>
+                    <td className="cell cell-mobile-hidden">{transaction.email}</td>
+                    <td className="cell">
+                      {transaction.amount} <span className="text-xs text-gray-500">{transaction.currency}</span> / {transaction.unit} <span className="text-xs text-gray-400">(month)</span>
+                    </td>
+                    <td className="cell cell-mobile-hidden text-center"><BankIcon method={transaction.method} /></td>
+                    <td className="cell text-center">{
+                      transaction.status === TransactionStatus.PENDING
+                        ? <button className="btn" onClick={() => onApprove({
+                          transId: transaction.id || '',
+                          uid: transaction.uid,
+                          unit: transaction.unit
+                        })}>Approve</button>
+                        : <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Approved</span>
+                    }</td>
+                    <td className="cell cell-mobile-hidden text-center">{created.format('DD/MM/YYYY')}</td>
+                  </tr>
+                }) : null}
+              </tbody>
+            </table>
           </div>
           <div className="px-4 py-3 space-x-2 text-right">
             <button className="btn" onClick={prevPage}>Prev</button>

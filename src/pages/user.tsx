@@ -2,7 +2,6 @@ import { Input } from '@/components'
 import Layout from '@/containers/Layout'
 import { trpc } from '@/utils/trpc'
 import dayjs from 'dayjs'
-import Image from 'next/image'
 
 export default function User() {
   const allUsers = trpc.getAllUsers.useQuery({ term: '' })

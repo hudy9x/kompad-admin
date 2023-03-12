@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(500);
+    return res.status(500).end()
   }
 
   console.log('===========================')
@@ -12,16 +12,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = body.token;
 
   if (!token) {
-
-    return res.status(400)
+    return res.status(400).end()
   }
 
   subscribeToTopic(token, NOTIFY_TOPIC.TRANSACTION).then(result => {
-    res.status(200)
+    res.status(200).end()
   })
     .catch(err => {
       console.log(err)
-      res.status(500)
+      res.status(500).end()
     })
 
 }

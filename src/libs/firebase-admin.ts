@@ -36,6 +36,10 @@ export const subscribeToTopic = (token: string, topic: NOTIFY_TOPIC) => {
 
 export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
   const message = {
+    notification: {
+      title: "Hello bitches",
+      body: "I'm tired now"
+    },
     data: {
       mess
     },

@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: true },
@@ -41,7 +42,13 @@ export default function Layout({
   children: JSX.Element | JSX.Element[]
   title: string
 }) {
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const logout = () => {
+    fetch('/api/logout').then(res => {
+      router.push('/signin')
+    })
+  }
 
   return (
     <>
@@ -293,15 +300,15 @@ export default function Layout({
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <div
+                            onClick={logout}
                             className={classNames(
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700'
                             )}
                           >
                             Logout
-                          </a>
+                          </div>
                         )}
                       </Menu.Item>
                     </Menu.Items>

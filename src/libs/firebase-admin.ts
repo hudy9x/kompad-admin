@@ -31,12 +31,16 @@ export const verifyFirebaseSessionCookie = async (session: string) => {
 
 export const fstore = getFirestore(app)
 
+export const verifyIdtoken = (idToken: string) => {
+  return getAuth().verifyIdToken(idToken)
+}
+
 export const subscribeToTopic = (token: string, topic: NOTIFY_TOPIC) => {
   return getMessaging().subscribeToTopic([token], topic)
 }
 
 export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
-  const message:Message = {
+  const message: Message = {
     notification: {
       title: "Hello bitches",
       body: "I'm tired now"

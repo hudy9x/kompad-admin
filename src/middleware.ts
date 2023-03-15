@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { USER_TOKEN, verifyJWT } from "./libs/jwt";
 
 const isPublicPath = (path: string) => {
-  return path.includes('_next/') || path.includes('favicon.ico') || path.includes('firebase-messaging-sw') || path.includes('/api/create-session')
+  return path.includes('_next/') || path.includes('favicon.ico') || path.includes('firebase-messaging-sw')
+    || path.includes('/api/create-session') || path.includes('/api/notification/send')
 }
 
 export async function middleware(req: NextRequest) {
@@ -16,10 +17,8 @@ export async function middleware(req: NextRequest) {
 
   if (!session) {
     if (!href.includes('/signin')) {
-      console.log(1.1)
       return NextResponse.redirect(new URL("/signin", req.url));
     }
-    console.log(1.2)
     return NextResponse.next()
   }
 
@@ -29,13 +28,11 @@ export async function middleware(req: NextRequest) {
   if (jwtData) {
 
     if (href.includes('/signin')) {
-      console.log(2.1)
       return NextResponse.redirect(new URL("/user", req.url));
     }
 
   } else {
     if (!href.includes('/signin')) {
-      console.log(2.2)
       return NextResponse.redirect(new URL("/signin", req.url));
     }
   }

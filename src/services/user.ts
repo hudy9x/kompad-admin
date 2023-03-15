@@ -18,6 +18,7 @@ export interface IUser {
   createdAt?: Timestamp
   createdAtDate?: Date
   status?: EUserStatus
+  role?: string
 }
 
 export const getAllUsers = async (): Promise<IUser[]> => {
@@ -39,6 +40,22 @@ export const getAllUsers = async (): Promise<IUser[]> => {
         })
 
         resolve(users)
+      })
+  })
+}
+
+export const getUserById = (uid: string): Promise<IUser> => {
+  return new Promise((resolve, reject) => {
+    fstore.doc(`users/${uid}`).get().then(userSnap => {
+      if (!userSnap.exists) {
+        return;
+      }
+
+      const data = userSnap.data() as IUser
+      resolve({...data, ...{id: userSnap.id}})
+
+    }).catch(err => {
+        reject(err)
       })
   })
 }

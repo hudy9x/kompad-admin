@@ -68,4 +68,12 @@ tr.row th {
   @apply absolute bottom-[-1px] left-0 w-full h-[2px] bg-indigo-400;
 }
 
+.sign-loading {
+  @apply opacity-0 pointer-events-none;
+}
+
+.sign-loading.displayed {
+  @apply absolute w-full h-full top-0 left-0 flex items-center justify-center z-10 bg-white/30 backdrop-blur-sm;
+  @apply font-bold text-2xl opacity-100 pointer-events-auto;
+}
 

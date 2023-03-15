@@ -2,6 +2,7 @@ import { serialize } from "cookie";
 import { verifyIdtoken } from "@/libs/firebase-admin";
 import { generateJWT, USER_TOKEN } from "@/libs/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getUserById } from "@/services/user";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {token, uid, email} = req.body
@@ -11,6 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!isValidToken) {
     return res.status(500).end()
   }
+
+  console.log('called create-session')
+  const user = await getUserById(uid)
+
+  if (user.role !== 'ADMIN') {
+    return res.status(400).end()
+  }
+
+  console.log('is admin')
 
   const jwtToken = await generateJWT()
 

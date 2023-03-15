@@ -31,11 +31,11 @@ export default function User() {
             <thead>
               <tr className="row">
                 <th className="text-left">uid</th>
-                <th className="text-left">email</th>
+                <th className="text-left cell-mobile-hidden">email</th>
                 <th className="cell-mobile-hidden text-left">Address</th>
                 <th className="text-left">Status</th>
                 <th className="cell-mobile-hidden text-center">Fullname</th>
-                <th>Created At</th>
+                <th className="" >Created At</th>
               </tr>
             </thead>
             <tbody>
@@ -49,11 +49,16 @@ export default function User() {
                         <span className="truncate w-24 block">
                           {user.id}
                         </span>
+                      <div className="cell-mobile-show">
+                        <div>{user.email}</div>
+                        <div>{user.fullname}</div>
+                        <div>{user.address}</div>
+                      </div>
                       </td>
-                      <td className="cell">{user.email}</td>
-                      <td className="cell">{user.address}</td>
+                      <td className="cell cell-mobile-hidden">{user.email}</td>
+                      <td className="cell cell-mobile-hidden">{user.address}</td>
                       <td className="cell">{user.status}</td>
-                      <td className="cell">{user.fullname}</td>
+                      <td className="cell cell-mobile-hidden">{user.fullname}</td>
                       <td className="cell">{date.format('DD/MM/YYYY')}</td>
                     </tr>
                   )

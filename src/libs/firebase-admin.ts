@@ -31,33 +31,43 @@ export const verifyFirebaseSessionCookie = async (session: string) => {
 
 export const fstore = getFirestore(app)
 
+export const verifyIdtoken = (idToken: string) => {
+  return getAuth().verifyIdToken(idToken)
+}
+
 export const subscribeToTopic = (token: string, topic: NOTIFY_TOPIC) => {
   return getMessaging().subscribeToTopic([token], topic)
 }
 
-export const sendNotify = (mess: string, topic: NOTIFY_TOPIC) => {
-  const message:Message = {
+interface NotificationMessage {
+  title: string
+  body: string
+  icon?: string
+  link?: string
+}
+export const sendNotify = (mess: NotificationMessage, topic: NOTIFY_TOPIC) => {
+
+  const message: Message = {
     notification: {
-      title: "Hello bitches",
-      body: "I'm tired now"
+      title: mess.title,
+      body: mess.body
     },
     webpush: {
       notification: {
-        title: "Another title",
-        body: "another body",
-        icon: "https://kompad-admin.vercel.app/notes.png",
-
+        title: mess.title,
+        body: mess.body,
+        icon: mess.icon ? mess.icon : "https://admin.kompad.app/notes.png",
       },
       fcmOptions: {
-        link: "https://kompad-admin.vercel.app/transactions?name=123123"
+        link: mess.link ? mess.link : "https://admin.kompad.app"
       }
     },
-    data: {
-      mess
-    },
+    // data: {
+    //   mess
+    // },
     topic
   }
-  console.log('sending notification', message)
+
   return getMessaging().send(message)
 }
 

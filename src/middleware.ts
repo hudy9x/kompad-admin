@@ -23,20 +23,26 @@ export async function middleware(req: NextRequest) {
   }
 
   const jwtToken = session.value;
-  const jwtData = await verifyJWT(jwtToken)
 
-  if (jwtData) {
+  try {
+    const jwtData = await verifyJWT(jwtToken)
 
-    if (href.includes('/signin')) {
-      return NextResponse.redirect(new URL("/user", req.url));
+    if (jwtData) {
+
+      if (href.includes('/signin')) {
+        return NextResponse.redirect(new URL("/user", req.url));
+      }
+
+    } else {
+      if (!href.includes('/signin')) {
+        return NextResponse.redirect(new URL("/signin", req.url));
+      }
     }
-
-  } else {
+  } catch (error) {
     if (!href.includes('/signin')) {
       return NextResponse.redirect(new URL("/signin", req.url));
     }
   }
-
 
 }
 

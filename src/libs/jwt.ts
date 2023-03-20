@@ -10,13 +10,14 @@ const secret = "I@#$982skjdf23"
 //   return verify(token, secret)
 // }
 export const USER_TOKEN = "USER_TOKEN";
+export const APP_ID = 'app-id';
 
 export async function generateJWT() {
   const jwtToken =  await new SignJWT({})
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(nanoid())
     .setIssuedAt()
-    .setExpirationTime('1h')
+    .setExpirationTime('24h')
     .sign(new TextEncoder().encode(secret))
 
 

@@ -14,11 +14,15 @@ export interface IPlan {
   prevExpiredTime?: Timestamp
 }
 
-export const updateUserPlan = async (transId: string, uid: string, unit: number) => {
+export const updateUserPlan = async (
+  transId: string,
+  uid: string,
+  unit: number
+) => {
   return new Promise(async (resolve, reject) => {
     const writeBatch = fstore.batch()
-    
-    const docRef = fstore.doc(`plans/${uid}`);
+
+    const docRef = fstore.doc(`plans/${uid}`)
     const transactionRef = fstore.doc(`transactions/${transId}`)
 
     const tranSnap = await transactionRef.get()
@@ -32,7 +36,7 @@ export const updateUserPlan = async (transId: string, uid: string, unit: number)
 
     if (transData.status === TransactionStatus.APPROVED) {
       console.log('This transaction has been approved')
-      return resolve(1);
+      return resolve(1)
     }
 
     const docSnap = await docRef.get()
@@ -49,18 +53,16 @@ export const updateUserPlan = async (transId: string, uid: string, unit: number)
 
     writeBatch.update(docRef, {
       expiredTime: newExpiredTime,
-      prevExpiredTime: planData.expiredTime
+      prevExpiredTime: planData.expiredTime,
     })
 
     writeBatch.update(transactionRef, {
-      status: TransactionStatus.APPROVED
+      status: TransactionStatus.APPROVED,
     })
 
-    writeBatch.commit().then(res => {
+    writeBatch.commit().then((res) => {
       resolve(1)
     })
-
-
 
     // docRef.update({
     //   expiredTime: newExpiredTime,
@@ -69,7 +71,5 @@ export const updateUserPlan = async (transId: string, uid: string, unit: number)
     //   console.log(res)
     //   resolve(1)
     // })
-
-      
   })
 }

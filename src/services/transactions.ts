@@ -8,7 +8,13 @@ type GetAllTransactionsFunc = (params: {
   status: string
 }) => Promise<ITransaction[]>
 
-const LIMIT = 20;
+const LIMIT = 20
+
+export const rejectTransactionById = async (id: string) => {
+  await fstore.doc(`transactions/${id}`).update({
+    status: TransactionStatus.REJECTED,
+  })
+}
 
 export const getAllTransactions: GetAllTransactionsFunc = ({
   term,
@@ -18,8 +24,8 @@ export const getAllTransactions: GetAllTransactionsFunc = ({
 }) => {
   return new Promise(async (resolve, reject) => {
     const tcollection = fstore
-    .collection('transactions')
-    .where("status", "==", status)
+      .collection('transactions')
+      .where('status', '==', status)
 
     const handler = (
       snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
@@ -33,11 +39,14 @@ export const getAllTransactions: GetAllTransactionsFunc = ({
 
       snapshot.forEach((tr) => {
         const data = tr.data() as ITransaction
-        transactions.push({ ...data, ...{ 
-          id: tr.id,
-          createdAtDate: data.createdAt?.toDate(),
-          updatedAtDate: data.updatedAt?.toDate()
-        } })
+        transactions.push({
+          ...data,
+          ...{
+            id: tr.id,
+            createdAtDate: data.createdAt?.toDate(),
+            updatedAtDate: data.updatedAt?.toDate(),
+          },
+        })
       })
 
       resolve(transactions)
@@ -64,15 +73,7 @@ export const getAllTransactions: GetAllTransactionsFunc = ({
     }
 
     if (!nextId && !prevId) {
-      tcollection
-        .orderBy('createdAt', 'desc')
-        .limit(LIMIT)
-        .get()
-        .then(handler)
+      tcollection.orderBy('createdAt', 'desc').limit(LIMIT).get().then(handler)
     }
-
   })
 }
-
-
-

@@ -1,5 +1,8 @@
 import { updateUserPlan } from '@/services/plans'
-import { getAllTransactions } from '@/services/transactions'
+import {
+  getAllTransactions,
+  rejectTransactionById,
+} from '@/services/transactions'
 import { z } from 'zod'
 import { procedure, router } from '../trpc'
 
@@ -24,6 +27,16 @@ export const transactionRouter = router({
       return {
         transactions: transactions,
       }
+    }),
+  rejectTransaction: procedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await rejectTransactionById(input.id)
+      return { status: 0 }
     }),
   approveTransaction: procedure
     .input(
